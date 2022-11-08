@@ -1,0 +1,32 @@
+Understanding OpenShift
+=======================
+        LAB 1 - S2I using DC
+        --------------------
+        oc login -u developer -p developer https://apis.ocp4.example.com:6443
+        oc whoami             # To Logout: oc logout
+
+        oc new-project one
+        oc projects
+        oc project
+        oc new-project two
+        oc projects
+        oc project
+        oc get projects
+        oc project one
+        oc new-app --as-deployment-config https://github.com/kelvinlnx/test-php
+        # READ EVERYTHING DISPLAYED BY THE oc new-app command
+        oc logs bc/test-php
+        oc status
+        oc get all
+        oc get dc,rc,pods,is,bc,build
+        oc start-build test-php
+        oc get dc,rc,bc,build,pods
+        oc get is
+        oc describe is test-php
+        oc get svc
+        oc expose svc test-php
+        oc get route
+        curl test-php-one.apps.ocp4.example.com
+        oc expose svc test-php --name whatever
+        curl whatever-one.apps.ocp4.example.com
+
