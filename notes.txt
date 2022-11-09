@@ -30,3 +30,93 @@ Understanding OpenShift
         oc expose svc test-php --name whatever
         curl whatever-one.apps.ocp4.example.com
 
+        LAB 2 - S2I using Deployment
+        ----------------------------
+        # Create Deployment, ReplicaSet resources and compare differences between proj one and two
+
+        oc project two
+        oc new-app --name two https://github.com/kelvinlnx/test-php
+        oc logs -f bc/two
+        oc status
+        oc get all
+        oc get deployment,rs,pods,is,bc,build
+        oc start-build two
+        oc get pods
+        oc logs two-1-build 
+        oc get deployment,rs,bc,build,pods
+        oc get is
+        oc describe is two
+        oc get svc
+        oc expose svc two
+        oc get route
+        curl two-two.apps.ocp4.example.com
+        oc expose svc two --hostname www.two.apps.ocp4.example.com --name second
+        curl www.two.apps.ocp4.example.com
+
+        Lab 3
+        -----
+        # Look/learn about resouce definations
+
+        oc project one
+        oc get pods -o wide
+        oc describe po <RUNNING-POD>
+        oc get po <RUNNING-POD> -o json
+        oc get po <RUNNING-POD> -o yaml
+        oc edit po <RUNNING-POD>
+
+        # REPEAT get, describe, edit above for rc, dc, svc, is, route, bc
+
+        # TIPS: Always deal with the "parent" resource if available dc/deployment, rc/rs, pod
+        Syntax:
+            oc expose dc|deploy|rc|rs|po <RESOURCE_NAME> [--name <SERVICE_NAME>]
+            oc expose svc <SVC_NAME> [--name <ROUTE_NAME>] [--hostname <URL>]
+            oc scale dc|deploy|rc|rs <RESOURCE_NAME> --replicas=<NUMBER>
+            
+        oc get endpoints
+        oc rsh <POD>
+        oc port-forward <POD> <LOCAL_PORT>:<PODS_PORT>
+        oc whoami --show-console
+        
+  Service names used in PODs
+=========================
+2 Ways of using Service:
+        1. ENVIRONMENT VAR
+          <SERVICE_NAME>_SERVICE_HOST environment variable in pods. Service has to be created first.
+
+        2. DNS
+          <SERVICE_NAME>.<PROJECT_NAME>.svc.cluster.local FQDN name.
+
+
+Route names created by OpenShift
+===============================
+        <ROUTE_NAME>-<PROJ_NAME>.<DOMAIN_WILDCARD>
+        <DOMAIN_WILDCARD> = apps.<BASE_DOMAIN>
+
+Chap 6
+======
+        Deploy App from Image/IS
+        ------------------------
+        oc new-app [--as-deployment-config] {[--docker-image] <IMAGE>}|<IS>
+
+        Result => DC/DEPLOY -> RC/RS -> POD
+                  [IS]
+                  [SVC]
+
+        Deploy App from Source Code
+        ---------------------------
+        oc new-app [--as-deployment-config] [-i <BUILDER_IS>[:<TAG>]] <URL>     # Attempt to use BUILDER_IS
+        oc new-app [--as-deployment-config] <BUILDER_IS>~<URL>                  # Force usage of BUILDER_IS
+
+        Result => DC/DEPLOY -> RC/RS -> POD
+                  IS
+                  SVC
+                  BC -> BUILD
+
+        Deploy App from Template
+        ------------------------
+        oc new-app --template <TEMPLATE> [-p <PARAM>=<VALUE>]...
+
+        Common Options for all 3 above:
+        -------------------------------
+        [--name <NAME>] [-e <ENV>=<VALUE>]...
+
