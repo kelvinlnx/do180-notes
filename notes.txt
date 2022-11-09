@@ -1,5 +1,16 @@
-Understanding OpenShift
-=======================
+OpenShift - Notes & Labs
+========================
+	The following assumptions are made for all the labs below:
+		user:        developer
+		password:    developer
+		base_domain: example.com
+		cluster:     ocp4
+	Therefore, the default api and wildcard domain would be:
+		API                      - https://api.ocp4.example.com:6443
+		Ingress(Wildcard Domain) - *.apps.ocp4.example.com
+	
+	If you are using a shared openshift cluster, you might want to rename project one and two to a more unique name, such as <USERNAME>-one and <USERNAME>-two.
+	
         LAB 1 - S2I using DC
         --------------------
         oc login -u developer -p developer https://apis.ocp4.example.com:6443
@@ -25,7 +36,7 @@ Understanding OpenShift
         oc describe is test-php
         oc get svc
         oc expose svc test-php
-        oc get route
+        oc get route		# notice the address format <ROUTE>-<PROJ>.apps.<CLUSTER>.<BASE_DOMAIN>
         curl test-php-one.apps.ocp4.example.com
         oc expose svc test-php --name whatever
         curl whatever-one.apps.ocp4.example.com
@@ -77,7 +88,7 @@ Understanding OpenShift
         oc port-forward <POD> <LOCAL_PORT>:<PODS_PORT>
         oc whoami --show-console
         
-  Service names used in PODs
+Service names used in PODs
 =========================
 2 Ways of using Service:
         1. ENVIRONMENT VAR
