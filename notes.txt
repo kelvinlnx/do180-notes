@@ -145,7 +145,7 @@ Secrets & Config Maps
                 oc set env <DC/DEPLOYMENT> --from secret/<SECRET_NAME> [--prefix <PREFIX>]
                 oc set volume <DC/DEPLOYMENT> --add --type {secret/configmap} \
                   [--secret-name <SECRET_NAME>] [--configmap-name <CM_NAME>] \
-                  --mount-path <PATH>
+                  --mount-path <PATH> [--name <NAME>]
         
 
 
