@@ -103,6 +103,57 @@ Route names created by OpenShift
         <ROUTE_NAME>-<PROJ_NAME>.<DOMAIN_WILDCARD>
         <DOMAIN_WILDCARD> = apps.<BASE_DOMAIN>
 
+Secrets & Config Maps
+=====================
+        Creating Secret/CM
+        ------------------
+                oc create secret/cm -h
+                
+                oc create secret generic <SECRET_NAME> \
+                  [--from-literal <KEY>=<VALUE>]... \
+                  [--from-file <KEY>=<FILE>]...
+                
+                oc create secret tls <SECRET_NAME> --cert <CERT_FILE> --key <KEY_FILE>
+                
+                oc create cm <CM_NAME> \
+                  [--from-literal <KEY>=<VALUE>]... \
+                  [--from-file <KEY>=<FILE>]...
+        
+        
+        Updating Secret/CM
+        ------------------
+                oc extract secret/<SECRET_NAME> [--to <PATH> [--confirm]]
+                oc set data <SECRET_NAME/CM_NAME> \
+                  [--from-literal <KEY>=<VALUE>]... \
+                  [--from-file <KEY>=<FILE>]...
+
+        Using Secret/CM
+        ---------------
+                oc set env <DC/DEPLOYMENT> --from secret/<SECRET_NAME> [--prefix <PREFIX>]
+                oc set volume <DC/DEPLOYMENT> --add --type {secret/configmap} \
+                  [--secret-name <SECRET_NAME>] [--configmap-name <CM_NAME>] \
+                  --mount-path <PATH>
+        
+
+
+        Example:
+                oc create secret generic mysecret --from-literal user=albert --from-literal lang=en
+                oc set env deploy/<DEPLOYMENT_NAME> --from secret/mysecret
+                oc get pods
+                # wait till new pods are rolled out
+                oc get pods
+                oc rsh <POD_NAME> env | egrep -i 'USER|LANG'
+                # the variables in the secret are now environment variables in the pods
+
+                oc create cm mycm --from-literal index.html='Hello World' --from-literal test.html='My Test Data'
+
+                oc set volume deploy/<DEPLOYMENT_NAME> --add --configmap-name mycm --mount-path /var/www/html/
+                oc get pods
+                # wait for new rollout
+                oc get pods
+                oc rsh <POD_NAME> cat /var/www/html/index.html
+                oc rsh <POD_NAME> cat /var/www/html/test.html
+
 Chap 6
 ======
         Deploy App from Image/IS
