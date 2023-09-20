@@ -103,6 +103,19 @@ Route names created by OpenShift
         <ROUTE_NAME>-<PROJ_NAME>.<DOMAIN_WILDCARD>
         <DOMAIN_WILDCARD> = apps.<BASE_DOMAIN>
 
+IMAGE MANAGEMENT
+================
+	skopeo copy|delete|inspect --creds <USER>:<PASS> [--format oci|v2s1|v2s2] [--src-tls-verify] [--dest-tls-verify] <LOCATION>...
+	where,
+	        <LOCATION> = location of image
+	                   = containers-storage:<IMAGE>[:TAG]
+	                   = docker://<REGISTRY>/<NAMESPACE>/<IMAGE>[:TAG]
+	                   = oci:<PATH>
+	                   = dir:<PATH>
+	
+	NOTES: When using podman build, you might want to specify the image format using the "--format docker" option. This uses image spec v2, schema 2. Default is oci image spec v1.0, this might cause problems with openshift trying to pull them image with signature errors.
+
+
 Secrets & Config Maps
 =====================
         Creating Secret/CM
